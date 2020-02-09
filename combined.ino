@@ -39,15 +39,15 @@ int UPDATES_PER_SECOND = 250;// High the number the faster the patterns will mov
 String next;
 #define led               D7
 
-#define WLAN_SSID       "Fioptics02623"             // Your SSID
-#define WLAN_PASS       "BXYYRMX4U8"        // Your password
+#define WLAN_SSID       "Your SSID"             // Your SSID
+#define WLAN_PASS       "Your PW"        // Your password
 
 /************************* Adafruit.io Setup *********************************/
 
 #define AIO_SERVER      "io.adafruit.com"
 #define AIO_SERVERPORT  1883                   // use 8883 for SSL
-#define AIO_USERNAME    "armonde"            // Replace it with your username
-#define AIO_KEY         "aio_OaoI29VRrwqDhUDzGEHTTc4cLasV"   // Replace with your Project Auth Key
+#define AIO_USERNAME    "Your Username"            // Replace it with your username
+#define AIO_KEY         "Your Key"   // Replace with your Project Auth Key
 
 /************ Global State (you don't need to change this!) ******************/
 
