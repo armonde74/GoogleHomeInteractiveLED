@@ -295,7 +295,7 @@ void ModeChange(){
   else if (next == "Rave" or next == "19"){
     w=6;
   }
-  else if (next == "Music" or next == "20"){
+  else if (next == "Music" or next == "music" or next == "20"){
     w=7;
   }
 }
