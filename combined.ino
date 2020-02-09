@@ -1,7 +1,7 @@
 #include <Adafruit_MQTT.h>
 #include <Adafruit_MQTT_Client.h>
 #include <FastLED.h>
-#include <EEPROM.h> 
+#include <EEPROM.h>
 #define LED_PIN     2
 #define NUM_LEDS    60                                      // Number of lights
 #define BRIGHTNESS  120                                       // Brightness
@@ -14,7 +14,7 @@ uint8_t colour;                                               // Ripple colour i
 int center = 0;                                               // Center of the current ripple.
 int step = -1;                                                // -1 is the initializing step.
 uint8_t myfade = 255;                                         // Starting brightness.
-#define maxsteps 16 
+#define maxsteps 16
 int num,nums = 1;
 int w = 0;
 int forth = 0;
@@ -96,7 +96,7 @@ void setup() {
     currentPalette = RainbowColors_p;
     currentBlending = LINEARBLEND;
 
-  
+
   // Connect to WiFi access point.
   Serial.println(); Serial.println();
   Serial.print("Connecting to ");
@@ -112,23 +112,23 @@ void setup() {
   digitalWrite(led,LOW);
 
   Serial.println("WiFi connected");
-  Serial.println("IP address: "); 
+  Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
- 
+
 
   // Setup MQTT subscription for onoff feed.
   mqtt.subscribe(&Mode);
- 
+
 }
 
 void loop() {
- 
+
   MQTT_connect();
 
   Adafruit_MQTT_Subscribe *subscription;
-  
+
   while ((subscription = mqtt.readSubscription(2))) {
-   
+
     if (subscription == &Mode) {
       Serial.print("Mode > ");
       Serial.print(F("Got: "));
@@ -147,7 +147,7 @@ void loop() {
 if(w==1){
     static uint8_t startIndex = 0;
     startIndex = startIndex + 1; /* motion speed */
-    
+
     FillLEDsFromPaletteColors( startIndex);
     }
     else if(w==3){
@@ -172,7 +172,7 @@ if(w==1){
     }
     else if(w==7){
      Musicpixels();
-    }    
+    }
     FastLED.show();
     FastLED.delay(1000 / UPDATES_PER_SECOND);
 }
@@ -190,7 +190,7 @@ void MQTT_connect() {
   Serial.print("Connecting to MQTT... ");
 
   uint8_t retries = 3;
-  
+
   while ((ret = mqtt.connect()) != 0) { // connect will return 0 for connected
     Serial.println(mqtt.connectErrorString(ret));
     Serial.println("Retrying MQTT connection in 5 seconds...");
@@ -211,7 +211,7 @@ void MQTT_connect() {
 void FillLEDsFromPaletteColors( uint8_t colorIndex)
 {
     uint8_t brightness = 255;
-    
+
     for( int i = 0; i < NUM_LEDS; i++) {
         leds[i] = ColorFromPalette( currentPalette, colorIndex, brightness, currentBlending);
         colorIndex += 3;
@@ -225,16 +225,16 @@ void ModeChange(){
       w=2;
   }
   else if (next == "Rainbow" or next == "rainbow"or next == "two"or next == "2"){
-   currentPalette = RainbowColors_p;        
+   currentPalette = RainbowColors_p;
        w=1;
   }
 
    else if (next == "rainbow colors" or next == "three"or next == "3"){
-    currentPalette = RainbowStripeColors_p;   
+    currentPalette = RainbowStripeColors_p;
       w=1;
   }
    else if (next == "Heat" or next == "heat"or next == "four"or next == "4"){
-    currentPalette = HeatColors_p;   
+    currentPalette = HeatColors_p;
       w=1;
   }
    else if (next == "Lava" or next == "Lava" or next == "five"or next == "5"){
@@ -302,8 +302,8 @@ void ModeChange(){
 
 void back(){
   delay(2000 /UPDATES_PER_SECOND);
-for (int i = 0; i < NUM_LEDS; i++) leds[i] = CRGB(0,0,0);  
- 
+for (int i = 0; i < NUM_LEDS; i++) leds[i] = CRGB(0,0,0);
+
   if (forth ==0){
     colour = random16(0,255);
   }
@@ -333,7 +333,7 @@ void FillSolid(){
 CRGB colour = CRGB( Red, Green, Blue);
 fill_solid(leds,NUM_LEDS ,CRGB( Red, Green, Blue));
 
-}  
+}
 
 void party(){
   colour = random16(0,255);
@@ -354,7 +354,7 @@ void red()
     CRGB purple = CHSV( HUE_RED, 255, 255);
     CRGB green  = CHSV( HUE_GREEN, 255, 255);
     CRGB black  = CRGB::Black;
-    
+
     currentPalette = CRGBPalette16(
                                   green,  purple, green,  purple,
                                    green,  purple, green,  purple,
@@ -396,7 +396,7 @@ void ripple() {
       break;
 
     case 0:
-      leds[center] = CHSV(colour, 255, 255);   
+      leds[center] = CHSV(colour, 255, 255);
       // Display the first pixel of the ripple.
       step ++;
       break;
@@ -407,16 +407,16 @@ void ripple() {
 
     default:                                                          // Middle of the ripples.
         leds[wrap(center + step)] += CHSV(colour, 255, myfade/step*2);   // Display the next pixels in the range for one side.
-        leds[wrap(center - step)] += CHSV(colour, 255, myfade/step*2); 
+        leds[wrap(center - step)] += CHSV(colour, 255, myfade/step*2);
         leds[wrap(center + (step+1))] += CHSV(colour, 255, myfade/step*2);   // Display the next pixels in the range for one side.
         leds[wrap(center - (step-1))] += CHSV(colour, 255, myfade/step*2);// Display the next pixels in the range for the other side.
         leds[wrap(center + (step+2))] += CHSV(colour, 255, myfade/step*2);   // Display the next pixels in the range for one side.
         leds[wrap(center - (step-2))] += CHSV(colour, 255, myfade/step*2);
         step ++;                                                      // Next step.
-        break;  
+        break;
   } // switch step
 } // ripple()
- 
+
 int wrap(int step) {
   if(step < 0) return NUM_LEDS + step;
   if(step > NUM_LEDS - 1) return step - NUM_LEDS;
@@ -476,7 +476,7 @@ void TwinkleMapPixels()
       if( random8() < CHANCE_OF_TWINKLE) {
         PixelState[i] = GettingBrighter;
       }
-      
+
     } else if( PixelState[i] == GettingBrighter ) {
       // this pixels is currently: GettingBrighter
       // so if it's at peak color, switch it to getting dimmer again
@@ -486,7 +486,7 @@ void TwinkleMapPixels()
         // otherwise, just keep brightening it:
         leds[i] += DELTA_COLOR_UP;
       }
-      
+
     } else { // getting dimmer again
       // this pixels is currently: GettingDimmerAgain
       // so if it's back to base color, switch it to steady dim
@@ -499,10 +499,11 @@ void TwinkleMapPixels()
       }
     }
   }
-void Musicpixels() 
+}
+void Musicpixels() {
   int x = analogRead(0);
   x = x * sensitivity;
-  {  if (x < 71) {
+    if (x < 71) {
       leds[(NUM_LEDS/2)] = CRGB(255, 0, 0);
     }
     else if (x > 71 && x <= 142) {
@@ -523,7 +524,7 @@ void Musicpixels()
     else {
       leds[(NUM_LEDS/2)] = CRGB(255, 0, 255);
     }
- 
+
   FastLED.show();
   delay(10);
   for (int z = NUM_LEDS; z > (NUM_LEDS/2); z--) {
